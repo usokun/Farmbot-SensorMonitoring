@@ -11,6 +11,10 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\LoraNpkT;
 use app\models\LoraNpkTSearch;
+use app\models\SoilMoistT;
+use app\models\SoilMoistTSearch;
+use app\models\AirTempPressT;
+use app\models\AirTempPressTSearch;
 use yii\web\NotFoundHttpException;
 
 class SiteController extends Controller
@@ -65,12 +69,27 @@ class SiteController extends Controller
     public function actionIndex()
     {
         // return $this->render('index');
-        $searchModel = new LoraNpkTSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $searchModelNPK = new LoraNpkTSearch();
+        $dataProviderNPK = $searchModelNPK->search($this->request->queryParams);
+        $dataProviderNPK->pagination = ['pageSize' => 10];
+        
+        $searchModelSMoist = new SoilMoistTSearch();
+        $dataProviderSMoist = $searchModelSMoist->search($this->request->queryParams);
+        $dataProviderSMoist->pagination = ['pageSize' => 10];
+
+        $searchModelAirTempPress = new AirTempPressTSearch();
+        $dataProviderAirTempPress = $searchModelAirTempPress->search($this->request->queryParams);
+        $dataProviderAirTempPress->pagination = ['pageSize' => 10];
+
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'searchModelNPK' => $searchModelNPK,
+            'dataProviderNPK' => $dataProviderNPK,
+            'searchModelSMoist' => $searchModelSMoist,
+            'dataProviderSMoist' => $dataProviderSMoist,
+            'searchModelAirTempPress' => $searchModelAirTempPress,
+            'dataProviderAirTempPress' => $dataProviderAirTempPress
+
         ]);
     }
 
