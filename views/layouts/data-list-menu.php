@@ -3,9 +3,8 @@
 use deyraka\materialdashboard\widgets\Menu;
 use yii\helpers\Html;
 
-
 ?>
-<div class="sidebar" data-color="purple" data-background-color="black" data-image="<?= $directoryAsset; ?>/img/sidebar-1.jpg">
+<div class="sidebar" data-color="purple" data-background-color="black">
 
     <!--
     Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
@@ -13,21 +12,22 @@ use yii\helpers\Html;
 -->
     <div class="logo">
         <a href="#" class="simple-text logo-normal">
-            Sensor Monitoring <br>  Dashboard
+            Material Dashboard 
         </a>
     </div>
     <div class="sidebar-wrapper">
         <?= Menu::widget([
             'items' => [
                 ['label' => 'Dashboard', 'icon' => 'dashboard', 'url' => ['/']],
-
                 ['label' => 'About', 'icon' => 'table_chart', 'url' => ['site/about']],
-
-                ['label' => 'Gii', 'icon' => 'tab', 'url' => ['/gii']],
-
-                ['label' => 'Account', 'icon' => 'text_format', 'items' => [
+                ['label' => 'Pages', 'icon' => 'text_format', 'items' => [
                     ['label' => 'Login', 'icon' => 'text_format', 'url' => ['/site/login']],
-                    ['label' => 'Registration', 'icon' => 'text_format', 'url' => ['/registration']],
+                    ['label' => 'Error', 'icon' => 'text_format', 'url' => ['/error']],
+                    ['label' => 'Registration', 'icon' => 'text_format', 'items' => [
+                        ['label' => 'Login', 'icon' => 'text_format', 'url' => ['/site/login']],
+                        ['label' => 'Error', 'icon' => 'text_format', 'url' => ['/error']],
+                        ['label' => 'Registration', 'icon' => 'text_format', 'url' => ['/registration']],
+                    ]],
                 ]],
             ]
         ]); ?>    

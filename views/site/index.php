@@ -19,12 +19,13 @@ use app\models\SoilMoistTSearch;
 
 use app\models\AirTempPressT;
 use app\models\AirTempPressTSearch;
-
+use app\assets\AppAsset;
 
 use kartik\grid\ActionColumn as GridActionColumn;
 use kartik\grid\GridView;
 use yii\grid\ActionColumn;
 
+AppAsset::register($this);
 
 
 /** @var yii\web\View $this */
@@ -34,9 +35,16 @@ $this->title = 'Dashboard';
 ?>
 <div class="site-index">
     <div class="body-content">
-        <h3>WELCOME TO DASHBOARD</h3>
+        <h3>FARMBOT SENSOR MONITORING</h3>
         <br>
-
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button id="npk-btn" type="button" class="btn btn-secondary"
+                style="background-color: #df286a; color: white; font-weight: 600;">NPK Data</button>
+            <button id="smoist-btn" type="button" class="btn btn-secondary" style="background-color: white;">Soil
+                Moisture Data</button>
+            <button id="air-temp-btn" type="button" class="btn btn-secondary" style="background-color: white;">Air
+                Temp. & Press. Data</button>
+        </div>
         <?php
         /* =======================================================
         Example of using Card Widget
@@ -52,8 +60,9 @@ $this->title = 'Dashboard';
         ?>
 
         <!------- start row npk -------->
-        <div class="row">
+        <div id="npk-card" class="row">
             <?php
+
             $loraData = LoraNpkT::find()->orderBy(['val_id' => SORT_DESC])->one();
             $T_v = $loraData->T;
             $H_v = $loraData->H;
@@ -63,6 +72,12 @@ $this->title = 'Dashboard';
             $K_v = $loraData->K;
             $loraTime_v = $loraData->time;
 
+            ?>
+
+            <?php
+
+            // $filtered_T_v = $filterNpkDataByDay->T;
+            
             $smoistData = SoilMoistT::find()->orderBy(['val_id' => SORT_DESC])->one();
             $SMoist_v = $smoistData->SMoist;
             $smoistTime_v = $smoistData->time;
@@ -71,11 +86,47 @@ $this->title = 'Dashboard';
             $ATemp_v = $air_temp_pressData->ATemp;
             $APress_v = $air_temp_pressData->APress;
 
+            function getNpkDataByDay($number)
+            {
+                $dayBasedValue = LoraNpkT::find()
+                    ->select(['N', 'P', 'K', 'time'])
+                    ->where(['DAYOFWEEK(FROM_UNIXTIME(time))' => $number])
+                    ->all();
+                return $dayBasedValue;
+            }
+            $dayBasedValue = LoraNpkT::find()
+            ->select(['N', 'P', 'K', 'time'])
+            ->where(['DAYOFWEEK(FROM_UNIXTIME(time))' => 2])
+            ->all();
+            $npk_temp = $dayBasedValue->T;
+            $encode_npk_temp = json_encode($npk_temp);
+
+            $npkDataArray = array(getNpkDataByDay(1), getNpkDataByDay(2), getNpkDataByDay(3), getNpkDataByDay(4), getNpkDataByDay(5), getNpkDataByDay(6), getNpkDataByDay(7));
+            $monNpkData = $npkDataArray[0];
+            $tueNpkData = $npkDataArray[1];
+            $wedNpkData = $npkDataArray[2];
+            $thuNpkData = $npkDataArray[3];
+            $friNpkData = $npkDataArray[4];
+            $satNpkData = $npkDataArray[5];
+            $sunNpkData = $npkDataArray[6];
+
+            // encode data above to json so can pass it to js
+            $encodeMonNpkData = json_encode($monNpkData);
+            $encodeTueNpkData = json_encode($tueNpkData);
+            $encodeWedNpkData = json_encode($wedNpkData);
+            $encodeThuNpkData = json_encode($thuNpkData);
+            $encodeFriNpkData = json_encode($friNpkData);
+            $encodeSatNpkData = json_encode($satNpkData);
+            $encodeSunNpkData = json_encode($sunNpkData);
+
+            // echo '<pre>';
+            // print_r($tueNpkData);
+            // echo '</pre>';
+
             // coloring
             $color = "";
-            
-            ?>
 
+            ?>
             <!-- T -->
             <div class="col-lg-4 col-md-6 col-sm-6">
                 <?php
@@ -183,7 +234,10 @@ $this->title = 'Dashboard';
                 )
                     ?>
             </div>
+        </div>
 
+        <!-- row for SMoist -->
+        <div id="smoist-card" class="row" style="display: none">
             <!-- SMoist -->
             <div class="col-lg-4 col-md-6 col-sm-6">
                 <?php
@@ -201,7 +255,10 @@ $this->title = 'Dashboard';
                 )
                     ?>
             </div>
+        </div>
 
+        <!-- row for ATemp -->
+        <div id="air-temp-card" class="row" style="display: none">
             <!-- ATemp -->
             <div class="col-lg-4 col-md-6 col-sm-6">
                 <?php
@@ -238,21 +295,11 @@ $this->title = 'Dashboard';
                     ?>
             </div>
         </div>
-        <!------- end row npk ------->
+
 
         <!------- start tables row here  ------->
         <div class="row">
             <div class="col-md-3 col-md-12 col-sm-12" style="background: #e6e6e6;">
-                <div class="btn-group" role="group" aria-label="Basic example">
-                    <button id="npk-btn" type="button" class="btn btn-secondary"
-                        style="background-color: #df286a; color: white; font-weight: 600;">NPK</button>
-                    <button id="smoist-btn" type="button" class="btn btn-secondary"
-                        style="background-color: white;">Soil
-                        Moist</button>
-                    <button id="air-temp-btn" type="button" class="btn btn-secondary"
-                        style="background-color: white;">Air
-                        Temp. & Press.</button>
-                </div>
 
                 <!-- =======================================================
                     Example of using Card Widget
@@ -292,7 +339,7 @@ $this->title = 'Dashboard';
                             [
                                 'attribute' => 'time',
                                 'value' => function ($model, $key, $index, $grid) {
-                                    return date('Y-m-d H:i:s', $model->time);
+                                    return date('l Y-m-d H:i:s', $model->time);
                                 },
                             ],
                             'T',
@@ -393,134 +440,17 @@ $this->title = 'Dashboard';
         </div>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            $("#npk-btn").click(function () {
-                if ($("#npk-table").css("display") == "block") {
-                    $("#smoist-table").hide();
-                    $("#npk-btn").css({ "background-color": "#df286a", "color": "white", "font-weight": "600" });
-
-                } else {
-                    $("#npk-table").show();
-                    $("#npk-btn").css({ "background-color": "#df286a", "color": "white", "font-weight": "600" });
-                    $("#smoist-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
-                    $("#air-temp-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
-                    $("#smoist-table").hide();
-                    $("#smoist-btn").css("background-color", "white");
-                    $("#air-temp-btn").css("background-color", "white");
-
-                }
-            })
-            $("#smoist-btn").click(function () {
-                if ($("#smoist-table").css("display") == "none") {
-                    $("#npk-table").hide();
-                    $("#air-temp-table").hide();
-                    $("#smoist-table").show();
-                    $("#npk-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
-                    $("#smoist-btn").css({ "background-color": "#df286a", "color": "white", "font-weight": "600" });
-                    $("#air-temp-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
-                } else {
-                    $("#npk-table").hide();
-                    $("#air-temp-table").hide();
-                }
-            })
-            $("#air-temp-btn").click(function () {
-                if ($("#air-temp-table").css("display") == "none") {
-                    $("#smoist-table").hide();
-                    $("#npk-table").hide();
-                    $("#air-temp-table").show();
-                    $("#npk-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
-                    $("#smoist-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
-                    $("#air-temp-btn").css({ "background-color": "#df286a", "color": "white", "font-weight": "600" });
-                } else {
-                    $("#npk-table").hide();
-                    $("#smoist-table").hide();
-                }
-            });
-        });
-
-        //SCRIPT FOR LINE AND BAR CHART
-        var data = {
-            // A labels array that can contain any sort of values
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-            // Our series array that contains series objects or in this case series data arrays
-            series: [
-                [5, 2, 4, 2, 1],
-                [3, 2, 9, 5, 4],
-            ]
-        };
-        // We are setting a few options for our chart and override the defaults
-        var options = {
-            // Don't draw the line chart points
-            showPoint: true,
-            // Disable line smoothing
-            lineSmooth: true,
-            // X-Axis specific configuration
-            axisX: {
-                // We can disable the grid for this axis
-                showGrid: true,
-                // and also don't show the label
-                showLabel: true
-            },
-            // Y-Axis specific configuration
-            axisY: {
-                // Lets offset the chart a bit from the labels
-                offset: 60,
-                // The label interpolation function enables you to modify the values
-                // used for the labels on each axis. Here we are converting the
-                // values into million pound.
-                labelInterpolationFnc: function (value) {
-                    return 'Rp ' + value + 'jt';
-                }
-            }
-        };
-
-        // Create a new line chart object where as first parameter we pass in a selector
-        // that is resolving to our chart container element. The Second parameter
-        // is the actual data object.
-        // new Chartist.Bar('.ct-chart', data, options);
-        new Chartist.Bar('#saleschart', data, options);
-        new Chartist.Line('#daychart', data, options);
-        new Chartist.Line('#yourchart', data, options);
-        // new Chartist.Bar('#herchart', data, options);
-
-        //SCRIPT FOR PIE CHART
-        var data2 = {
-            labels: ['Bananas', 'Apples', 'Grapes'],
-            series: [20, 15, 40]
-        };
-
-        var options2 = {
-            labelInterpolationFnc: function (value) {
-                return value[0]
-            }
-        };
-
-        var responsiveOptions = [
-            ['screen and (min-width: 640px)', {
-                chartPadding: 30,
-                labelOffset: 100,
-                labelDirection: 'explode',
-                labelInterpolationFnc: function (value) {
-                    return value;
-                }
-            }],
-            ['screen and (min-width: 1024px)', {
-                labelOffset: 80,
-                chartPadding: 20
-            }]
-        ];
-
-        new Chartist.Pie('#herchart', data2, options2, responsiveOptions);
-
-        new Chartist.Pie('#yourchart', {
-            series: [20, 10, 30, 40]
-        }, {
-            donut: true,
-            donutWidth: 20,
-            donutSolid: true,
-            startAngle: 270,
-            showLabel: true
-        });
-    </script>
+    <?php
+    echo "<script>
+    var monNpkData = $encodeMonNpkData;
+    var tueNpkData = $encodeTueNpkData;
+    var wedNpkData = $encodeWedNpkData;
+    var thuNpkData = $encodeThuNpkData;
+    var friNpkData = $encodeFriNpkData;
+    var satNpkData = $encodeSatNpkData;
+    var sunNpkData = $encodeSunNpkData;
+    var temp_npkData = $encode_npk_temp;
+    </script>";
+    ?>
+    <script src="js/cardchart.js"></script>
 </div>

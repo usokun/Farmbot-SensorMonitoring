@@ -49,11 +49,13 @@ $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/deyraka/yii2
 <body>
     <?php $this->beginBody() ?>
     <div class="wrapper">
-        <?= $this->render('left', ['directoryAsset' => $directoryAsset]) ?>
+        
         <div class="main-panel">
             <?= $this->render('header', ['directoryAsset' => $directoryAsset, 'title' => $this->title]) ?>
             <?= $this->render('content', ['directoryAsset' => $directoryAsset, 'content' => $content]) ?>
             <?= $this->render('footer') ?>
+            <?= $this->render('data-list-menu') ?>
+
         </div>
     </div>
     <?php $this->endBody() ?>
