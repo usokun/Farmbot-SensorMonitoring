@@ -1,13 +1,9 @@
-DECLARE @a integer;
-DECLARE @day varchar;
-
-SET @a = 0;
-SET @day = 'DAY'
-
-SELECT N, P, K, time from lora_npk_t WHERE time = (
- select DAYOFWEEK(FROM_UNIXTIME(time as a)) //expect return = 1-7
-
-if (a > 0) then
-	if (a = 1) then
-        SELECT N, P, K, time FROM lora_npk_t WHERE time = 
-)
+SELECT 
+    CASE WHEN WEEK(FROM_UNIXTIME(time)) BETWEEN WEEK(now())-1 AND WEEK(now()) THEN N ELSE 0 END AS this_week_N,
+    CASE WHEN WEEK(FROM_UNIXTIME(time)) BETWEEN WEEK(now())-1 AND WEEK(now()) THEN P ELSE 0 END AS this_week_P,
+    CASE WHEN WEEK(FROM_UNIXTIME(time)) BETWEEN WEEK(now())-1 AND WEEK(now()) THEN K ELSE 0 END AS this_week_K,
+    CASE WHEN WEEK(FROM_UNIXTIME(time)) BETWEEN WEEK(now())-2 AND WEEK(now())-1 THEN N ELSE 0 END AS prev_week_N,
+    CASE WHEN WEEK(FROM_UNIXTIME(time)) BETWEEN WEEK(now())-2 AND WEEK(now())-1 THEN P ELSE 0 END AS prev_week_P,
+    CASE WHEN WEEK(FROM_UNIXTIME(time)) BETWEEN WEEK(now())-2 AND WEEK(now())-1 THEN K ELSE 0 END AS prev_week_K
+FROM lora_npk_t
+WHERE WEEK(FROM_UNIXTIME(time)) BETWEEN WEEK(now())-2 AND WEEK(now()) LIMIT 10;

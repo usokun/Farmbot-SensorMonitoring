@@ -5,12 +5,14 @@ $(document).ready(function () {
             $("#air-temp-table").hide();
             $("#npk-btn").css({ "background-color": "#df286a", "color": "white", "font-weight": "600" });
             $("#npk-card").show();
+            $("#npk-chart").show();
             $("#smoist-card").hide();
             $("#air-temp-card").hide();
 
         } else {
             $("#npk-table").show();
             $("#npk-card").show();
+            $("#npk-chart").show();
             $("#npk-btn").css({ "background-color": "#df286a", "color": "white", "font-weight": "600" });
             $("#smoist-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
             $("#air-temp-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
@@ -24,6 +26,7 @@ $(document).ready(function () {
     $("#smoist-btn").click(function () {
         if ($("#smoist-table").css("display") == "none") {
             $("#npk-table").hide();
+            $("#npk-chart").hide();
             $("#air-temp-table").hide();
             $("#smoist-table").show();
             $("#smoist-card").show();
@@ -36,7 +39,8 @@ $(document).ready(function () {
             $("#npk-table").hide();
             $("#air-temp-table").hide();
             $("#smoist-card").show();
-            $("#npk-card").hide();            
+            $("#npk-card").hide();         
+            $("#npk-chart").hide();         
             $("#air-temp-card").hide();
             
         }
@@ -47,6 +51,7 @@ $(document).ready(function () {
             $("#npk-table").hide();
             $("#air-temp-table").show();
             $("#air-temp-card").show();
+            $("#npk-chart").hide();
             $("#npk-card").hide();            
             $("#smoist-card").hide();
             $("#npk-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
@@ -56,7 +61,8 @@ $(document).ready(function () {
             $("#npk-table").hide();
             $("#smoist-table").hide();
             $("#air-temp-card").show();
-            $("#npk-card").hide();            
+            $("#npk-card").hide();
+            $("#npk-chart").hide();            
             $("#smoist-card").hide();
 
         }

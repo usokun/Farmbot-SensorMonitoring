@@ -19,6 +19,10 @@ use app\models\SoilMoistTSearch;
 
 use app\models\AirTempPressT;
 use app\models\AirTempPressTSearch;
+
+use app\models\NpkThisAndPreviousWeekM;
+use app\models\NpkModel;
+
 use app\assets\AppAsset;
 
 use kartik\grid\ActionColumn as GridActionColumn;
@@ -95,34 +99,31 @@ $this->title = 'Dashboard';
                 return $dayBasedValue;
             }
             $dayBasedValue = LoraNpkT::find()
-            ->select(['N', 'P', 'K', 'time'])
-            ->where(['DAYOFWEEK(FROM_UNIXTIME(time))' => 2])
-            ->all();
-            $npk_temp = $dayBasedValue->T;
-            $encode_npk_temp = json_encode($npk_temp);
+                ->select(['N', 'P', 'K', 'time'])
+                ->where(['DAYOFWEEK(FROM_UNIXTIME(time))' => 2])
+                ->all();
 
-            $npkDataArray = array(getNpkDataByDay(1), getNpkDataByDay(2), getNpkDataByDay(3), getNpkDataByDay(4), getNpkDataByDay(5), getNpkDataByDay(6), getNpkDataByDay(7));
-            $monNpkData = $npkDataArray[0];
-            $tueNpkData = $npkDataArray[1];
-            $wedNpkData = $npkDataArray[2];
-            $thuNpkData = $npkDataArray[3];
-            $friNpkData = $npkDataArray[4];
-            $satNpkData = $npkDataArray[5];
-            $sunNpkData = $npkDataArray[6];
+            $getNpkDataThisAndPreviousWeek = NpkThisAndPreviousWeekM::getThisAndPreviousWeekNPK();
 
-            // encode data above to json so can pass it to js
-            $encodeMonNpkData = json_encode($monNpkData);
-            $encodeTueNpkData = json_encode($tueNpkData);
-            $encodeWedNpkData = json_encode($wedNpkData);
-            $encodeThuNpkData = json_encode($thuNpkData);
-            $encodeFriNpkData = json_encode($friNpkData);
-            $encodeSatNpkData = json_encode($satNpkData);
-            $encodeSunNpkData = json_encode($sunNpkData);
+            $thisWeekT = $getNpkDataThisAndPreviousWeek['this_week_T'] . json_encode($this);
+            $thisWeekH = $getNpkDataThisAndPreviousWeek['this_week_H'] . json_encode($this);
+            $thisWeekPH = $getNpkDataThisAndPreviousWeek['this_week_PH'] . json_encode($this);
+            $thisWeekN = $getNpkDataThisAndPreviousWeek['this_week_N'] . json_encode($this);
+            $thisWeekP = $getNpkDataThisAndPreviousWeek['this_week_P'] . json_encode($this);
+            $thisWeekK = $getNpkDataThisAndPreviousWeek['this_week_K'] . json_encode($this);
 
+            $prevWeekT = $getNpkDataThisAndPreviousWeek['prev_week_T'] . json_encode($this);
+            $prevWeekH = $getNpkDataThisAndPreviousWeek['prev_week_H'] . json_encode($this);
+            $prevWeekPH = $getNpkDataThisAndPreviousWeek['prev_week_PH'] . json_encode($this);
+            $prevWeekN = $getNpkDataThisAndPreviousWeek['prev_week_N'] . json_encode($this);
+            $prevWeekP = $getNpkDataThisAndPreviousWeek['prev_week_P'] . json_encode($this);
+            $prevWeekK = $getNpkDataThisAndPreviousWeek['prev_week_K'] . json_encode($this);
+
+            // print_r($data);
             // echo '<pre>';
-            // print_r($tueNpkData);
+            // print_r($getNpkDataThisAndPreviousWeek);
             // echo '</pre>';
-
+            
             // coloring
             $color = "";
 
@@ -295,6 +296,22 @@ $this->title = 'Dashboard';
                     ?>
             </div>
         </div>
+        <!-- NPK CHART DATA -->
+        <div id="npk-chart" class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <?=
+                    CardChart::widget(
+                        [
+                            "idchart" => 'saleschart',
+                            "color" => CardChart::COLOR_INFO,
+                            "url" => "",
+                            "title" => "NPK CHART DATA",
+                            "description" => "This chart displays comparison between `previous week average (blue)` and `this week average (red)` NPK data",
+                        ]
+                    )
+                    ?>
+            </div>
+        </div>
 
 
         <!------- start tables row here  ------->
@@ -318,7 +335,7 @@ $this->title = 'Dashboard';
                     'color' => Card::COLOR_INFO,
                     'headerIcon' => 'table_rows',
                     'collapsable' => false,
-                    'title' => '',
+                    'title' => 'NPK TABLE DATA',
                     'titleTextType' => Card::TYPE_INFO,
                     'showFooter' => true,
                     'footerContent' => '',
@@ -401,55 +418,23 @@ $this->title = 'Dashboard';
 
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <?=
-                    CardChart::widget(
-                        [
-                            "idchart" => 'saleschart',
-                            "color" => CardChart::COLOR_WARNING,
-                            "url" => Url::to(['/site/contact']),
-                            "title" => "Feel Excellent Panorama with Us",
-                            "description" => "The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to 'Naviglio' where you can enjoy the main night life in Barcelona.",
-                            "footerTextLeft" => "$10,000/night",
-                            "footerTextRight" => "Barcelona",
-                            "footerTextType" => CardChart::TYPE_INFO,
-                        ]
-                    )
-                    ?>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <?=
-                    CardStats::widget(
-                        [
-                            "color" => Cardstats::COLOR_PRIMARY,
-                            "headerIcon" => "weekend",
-                            "title" => "Today's sale",
-                            "subtitle" => "184",
-                            "footerIcon" => "warning",
-                            "footerText" => "Check this out",
-                            "footerUrl" => Url::to(['site/login']),
-                            "footerTextType" => Cardstats::TYPE_INFO,
-                        ]
-                    )
-                    ?>
-            </div>
-        </div>
     </div>
-
     <?php
     echo "<script>
-    var monNpkData = $encodeMonNpkData;
-    var tueNpkData = $encodeTueNpkData;
-    var wedNpkData = $encodeWedNpkData;
-    var thuNpkData = $encodeThuNpkData;
-    var friNpkData = $encodeFriNpkData;
-    var satNpkData = $encodeSatNpkData;
-    var sunNpkData = $encodeSunNpkData;
-    var temp_npkData = $encode_npk_temp;
+    var thisWeek_T = $thisWeekT;
+    var thisWeek_H = $thisWeekH;
+    var thisWeek_PH = $thisWeekPH;
+    var thisWeek_N = $thisWeekN;
+    var thisWeek_P = $thisWeekP;
+    var thisWeek_K = $thisWeekK;
+
+    var prevWeek_T = $prevWeekT;
+    var prevWeek_H = $prevWeekH;
+    var prevWeek_PH = $prevWeekPH;
+    var prevWeek_N = $prevWeekN;
+    var prevWeek_P = $prevWeekP;
+    var prevWeek_K = $prevWeekK;
+    
     </script>";
     ?>
     <script src="js/cardchart.js"></script>
