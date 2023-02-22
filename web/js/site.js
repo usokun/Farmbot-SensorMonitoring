@@ -1,70 +1,104 @@
+function myFunction() {
+    var x = document.getElementById("myMenunav");
+    if (x.className === "menunav") {
+      x.className += " responsive";
+    } else {
+      x.className = "menunav";
+    }
+}
 $(document).ready(function () {
-    $("#npk-btn").click(function () {
-        if ($("#npk-table").css("display") == "block") {
-            $("#smoist-table").hide();
-            $("#air-temp-table").hide();
-            $("#npk-btn").css({ "background-color": "#df286a", "color": "white", "font-weight": "600" });
-            $("#npk-card").show();
-            $("#npk-chart").show();
-            $("#smoist-card").hide();
-            $("#air-temp-card").hide();
 
-        } else {
-            $("#npk-table").show();
-            $("#npk-card").show();
-            $("#npk-chart").show();
-            $("#npk-btn").css({ "background-color": "#df286a", "color": "white", "font-weight": "600" });
-            $("#smoist-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
-            $("#air-temp-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
-            $("#smoist-table").hide();
-            $("#smoist-card").hide();
-            $("#smoist-btn").css("background-color", "white");
-            $("#air-temp-btn").css("background-color", "white");
+    function showAllContent(){
+        $(".npk").show();
+        $(".smoist").show();
+        $(".air-temp").show();
 
-        }
-    })
-    $("#smoist-btn").click(function () {
-        if ($("#smoist-table").css("display") == "none") {
-            $("#npk-table").hide();
-            $("#npk-chart").hide();
-            $("#air-temp-table").hide();
-            $("#smoist-table").show();
-            $("#smoist-card").show();
-            $("#npk-card").hide();            
-            $("#air-temp-card").hide();
-            $("#npk-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
-            $("#smoist-btn").css({ "background-color": "#df286a", "color": "white", "font-weight": "600" });
-            $("#air-temp-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
-        } else {
-            $("#npk-table").hide();
-            $("#air-temp-table").hide();
-            $("#smoist-card").show();
-            $("#npk-card").hide();         
-            $("#npk-chart").hide();         
-            $("#air-temp-card").hide();
-            
-        }
-    })
-    $("#air-temp-btn").click(function () {
-        if ($("#air-temp-table").css("display") == "none") {
-            $("#smoist-table").hide();
-            $("#npk-table").hide();
-            $("#air-temp-table").show();
-            $("#air-temp-card").show();
-            $("#npk-chart").hide();
-            $("#npk-card").hide();            
-            $("#smoist-card").hide();
-            $("#npk-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
-            $("#smoist-btn").css({ "background-color": "white", "color": "black", "font-weight": "300" });
-            $("#air-temp-btn").css({ "background-color": "#df286a", "color": "white", "font-weight": "600" });
-        } else {
-            $("#npk-table").hide();
-            $("#smoist-table").hide();
-            $("#air-temp-card").show();
-            $("#npk-card").hide();
-            $("#npk-chart").hide();            
-            $("#smoist-card").hide();
+        $("#all-btn").css({"background-color": "#df286a", "color": "white", "font-weight": 600});
+        $("#npk-btn").css({"background-color": "white", "color": "black", "font-weight": 300});
+        $("#smoist-btn").css({"background-color": "white", "color": "black", "font-weight": 300});
+        $("#air-temp-btn").css({"background-color": "white", "color": "black", "font-weight": 300});
+    }
+
+    function showNpkOnly(){
+        $(".smoist").hide();
+        $(".air-temp").hide();
+        $(".npk").show();
+
+        $("#npk-btn").css({"background-color": "#df286a", "color": "white", "font-weight": 600});
+        $("#all-btn").css({"background-color": "white", "color": "black", "font-weight": 300});
+        $("#all-btn").css({"background-color": "white", "color": "black", "font-weight": 300});
+        $("#smoist-btn").css({"background-color": "white", "color": "black", "font-weight": 300});
+        $("#air-temp-btn").css({"background-color": "white", "color": "black", "font-weight": 300});
+
+    }
+    function showSMoistOnly(){
+        $(".air-temp").hide();
+        $(".npk").hide();
+        $(".smoist").show();
+        console.log("show moist only");
+
+        $("#smoist-btn").css({"background-color": "#df286a", "color": "white", "font-weight": 600});
+        $("#npk-btn").css({"background-color": "white", "color": "black", "font-weight": 300});
+        $("#all-btn").css({"background-color": "white", "color": "black", "font-weight": 300});
+        $("#air-temp-btn").css({"background-color": "white", "color": "black", "font-weight": 300});
+    }
+    function showAirTempPressOnly(){
+        $(".smoist").hide();
+        $(".npk").hide();
+        $(".air-temp").show();
+        console.log("air temp press only");
+
+
+        $("#smoist-btn").css({"background-color": "white", "color": "black", "font-weight": 300});
+        $("#npk-btn").css({"background-color": "white", "color": "black", "font-weight": 300});
+        $("#all-btn").css({"background-color": "white", "color": "black", "font-weight": 300});
+        $("#air-temp-btn").css({"background-color": "#df286a", "color": "white", "font-weight": 600});
+    }
+
+    $("#all-btn").click(function(){
+        if($("#all-btn").attr("data-state")== "active"){
+            showAllContent();
+
+        }else{
+            showAllContent();
+
 
         }
     });
+    $("#npk-btn").click(function () {
+        if ($("#npk-btn").attr("data-state") == "inactive") {
+            showNpkOnly();
+            $("#npk-btn").attr("data-state", "active");
+            $("#all-btn").attr("data-state", "inactive");
+        } else {
+            showNpkOnly();
+
+
+        }
+    });
+    $("#smoist-btn").click(function () {
+        if ($("#smoist-btn").attr("data-state") == "inactive") {
+            showSMoistOnly();
+            $("#smoist-btn").attr("data-state", "active");
+            $("#all-btn").attr("data-state", "inactive");
+            $("#npk-btn").attr("data-state", "inactive");
+            $("#air-temp-btn").attr("data-state", "inactive");
+
+        } else {
+            showSMoistOnly();
+
+        }
+    });
+    $("#air-temp-btn").click(function () {
+        if ($("#air-temp-btn").attr("data-state") == "inactive") {
+            showAirTempPressOnly();
+            $("#air-temp-btn").attr("data-state", "active");
+            $("#all-btn").attr("data-state", "inactive");
+            $("#npk-btn").attr("data-state", "inactive");
+            $("#smoist-btn").attr("data-state", "inactive");
+        } else {
+            showAirTempPressOnly();
+        }
+    })
+
 });

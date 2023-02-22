@@ -1,11 +1,41 @@
 //SCRIPT FOR LINE AND BAR CHART
-var data = {
+var npkdata = {
     // A labels array that can contain any sort of values
     labels: ['Temp', 'Humid', 'pH', 'N', 'P', 'K'],
     // Our series array that contains series objects or in this case series data arrays
     series: [
         [prevWeek_T, prevWeek_H, prevWeek_PH, prevWeek_N, prevWeek_P, prevWeek_K],
         [thisWeek_T, thisWeek_H, thisWeek_PH, thisWeek_N, thisWeek_P, thisWeek_K]
+
+    ]
+};
+
+var smoistdata = {
+    // A labels array that can contain any sort of values
+    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    // Our series array that contains series objects or in this case series data arrays
+    series: [
+        [smoist_sun, smoist_mon, smoist_tue, smoist_wed, smoist_thu, smoist_fri, smoist_sat],
+
+    ]
+};
+
+var air_temp_data = {
+    // A labels array that can contain any sort of values
+    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    // Our series array that contains series objects or in this case series data arrays
+    series: [
+        [atemp_sun, atemp_mon, atemp_tue, atemp_wed, atemp_thu, atemp_fri, atemp_sat],
+
+    ]
+};
+
+var air_press_data = {
+    // A labels array that can contain any sort of values
+    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    // Our series array that contains series objects or in this case series data arrays
+    series: [
+        [apress_sun, apress_mon, apress_tue, apress_wed, apress_thu, apress_fri, apress_sat]
 
     ]
 };
@@ -39,46 +69,10 @@ var options = {
 // that is resolving to our chart container element. The Second parameter
 // is the actual data object.
 // new Chartist.Bar('.ct-chart', data, options);
-new Chartist.Bar('#saleschart', data, options);
-new Chartist.Line('#daychart', data, options);
-new Chartist.Line('#yourchart', data, options);
+new Chartist.Bar('#npkchart', npkdata, options);
+new Chartist.Bar('#smoistchart', smoistdata, options);
+new Chartist.Bar('#airtempchart', air_temp_data, options);
+new Chartist.Bar('#airpresschart', air_press_data, options);
+// new Chartist.Line('#daychart', data, options);
+// new Chartist.Line('#yourchart', data, options);
 // new Chartist.Bar('#herchart', data, options);
-
-//SCRIPT FOR PIE CHART
-var data2 = {
-    labels: ['Bananas', 'Apples', 'Grapes'],
-    series: [20, 15, 40]
-};
-
-var options2 = {
-    labelInterpolationFnc: function (value) {
-        return value[0]
-    }
-};
-
-var responsiveOptions = [
-    ['screen and (min-width: 640px)', {
-        chartPadding: 30,
-        labelOffset: 100,
-        labelDirection: 'explode',
-        labelInterpolationFnc: function (value) {
-            return value;
-        }
-    }],
-    ['screen and (min-width: 1024px)', {
-        labelOffset: 80,
-        chartPadding: 20
-    }]
-];
-
-new Chartist.Pie('#herchart', data2, options2, responsiveOptions);
-
-new Chartist.Pie('#yourchart', {
-    series: [20, 10, 30, 40]
-}, {
-    donut: true,
-    donutWidth: 20,
-    donutSolid: true,
-    startAngle: 270,
-    showLabel: true
-});
