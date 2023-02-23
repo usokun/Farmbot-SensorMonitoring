@@ -4,7 +4,7 @@ use deyraka\materialdashboard\widgets\Menu;
 use yii\helpers\Html;
 
 ?>
-<div class="sidebar" data-color="purple" data-background-color="black">
+<div class="sidebar" data-color="danger" data-background-color="black">
 
     <!--
     Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
