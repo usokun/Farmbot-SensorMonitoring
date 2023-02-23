@@ -32,6 +32,11 @@ use kartik\grid\ActionColumn as GridActionColumn;
 use kartik\grid\GridView;
 use yii\grid\ActionColumn;
 
+use yii\bootstrap4\Button;
+use yii\bootstrap4\Widget;
+use yii\bootstrap4\NavBar;
+use yii\bootstrap4\Nav;
+
 AppAsset::register($this);
 
 
@@ -131,17 +136,27 @@ $this->title = 'Dashboard';
         $color = "";
 
         ?>
-
-        <h3>FARMBOT SENSOR MONITORING</h3>
-        <br>
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <button data-state="active" id="all-btn" type="button" class="btn btn-secondary" style="background-color: #df286a; color: white; font-weight:600;">All Data</button>
-                <button data-state="inactive" id="npk-btn" type="button" class="btn btn-secondary" style="background-color: white;">NPK Data</button>
-                <button data-state="inactive" id="smoist-btn" type="button" class="btn btn-secondary" style="background-color: white; ">Soil
-                    Moisture Data</button>
-                <button data-state="inactive" id="air-temp-btn" type="button" class="btn btn-secondary" style="background-color: white;">Air
-                    Temp. & Press. Data</button>
+        <!-- Nav button here -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <?php
+                    echo Button::widget([
+                        'label' => 'All',
+                        'options' => ['class' => 'btn-md', 'id' => 'all-btn', 'data-state' => 'active', 'style' => ['background-color' => '#df286a', 'color' => 'white', 'font-weight' => 600]],
+                    ]);
+                    echo Button::widget([
+                        'label' => 'NPK',
+                        'options' => ['class' => 'btn-md', 'id' => 'npk-btn', 'data-state' => 'inactive', 'style' => ['background-color' => 'white', 'color' => 'black', 'font-weight' => 300]],
+                    ]);
+                    echo Button::widget([
+                        'label' => 'Soil Moist',
+                        'options' => ['class' => 'btn-md', 'id' => 'smoist-btn', 'data-state' => 'inactive', 'style' => ['background-color' => 'white', 'color' => 'black', 'font-weight' => 300]],
+                    ]);
+                    echo Button::widget([
+                        'label' => 'Air Temp. & Pressure',
+                        'options' => ['class' => 'btn-md', 'id' => 'air-temp-btn', 'data-state' => 'inactive', 'style' => ['background-color' => 'white', 'color' => 'black', 'font-weight' => 300]],
+                    ]);
+                ?>
             </div>
         </div>
 

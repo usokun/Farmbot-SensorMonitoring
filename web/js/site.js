@@ -1,11 +1,3 @@
-function myFunction() {
-    var x = document.getElementById("myMenunav");
-    if (x.className === "menunav") {
-      x.className += " responsive";
-    } else {
-      x.className = "menunav";
-    }
-}
 $(document).ready(function () {
 
     function showAllContent(){
