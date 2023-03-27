@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\httpclient\Client;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
@@ -13,9 +14,12 @@ use app\models\LoraNpkT;
 use app\models\LoraNpkTSearch;
 use app\models\SoilMoistT;
 use app\models\SoilMoistTSearch;
+use app\models\SoilMoistP;
 use app\models\AirTempPressT;
 use app\models\AirTempPressTSearch;
 use yii\web\NotFoundHttpException;
+use yii\data\ArrayDataProvider;
+
 
 class SiteController extends Controller
 {
@@ -72,7 +76,7 @@ class SiteController extends Controller
         $searchModelNPK = new LoraNpkTSearch();
         $dataProviderNPK = $searchModelNPK->search($this->request->queryParams);
         $dataProviderNPK->pagination = ['pageSize' => 10];
-        
+
         $searchModelSMoist = new SoilMoistTSearch();
         $dataProviderSMoist = $searchModelSMoist->search($this->request->queryParams);
         $dataProviderSMoist->pagination = ['pageSize' => 10];
@@ -83,6 +87,31 @@ class SiteController extends Controller
 
 
         return $this->render('index', [
+            'searchModelNPK' => $searchModelNPK,
+            'dataProviderNPK' => $dataProviderNPK,
+            'searchModelSMoist' => $searchModelSMoist,
+            'dataProviderSMoist' => $dataProviderSMoist,
+            'searchModelAirTempPress' => $searchModelAirTempPress,
+            'dataProviderAirTempPress' => $dataProviderAirTempPress
+
+        ]);
+    }
+    public function actionDashboard()
+    {
+        $searchModelNPK = new LoraNpkTSearch();
+        $dataProviderNPK = $searchModelNPK->search($this->request->queryParams);
+        $dataProviderNPK->pagination = ['pageSize' => 10];
+
+        $searchModelSMoist = new SoilMoistTSearch();
+        $dataProviderSMoist = $searchModelSMoist->search($this->request->queryParams);
+        $dataProviderSMoist->pagination = ['pageSize' => 10];
+
+        $searchModelAirTempPress = new AirTempPressTSearch();
+        $dataProviderAirTempPress = $searchModelAirTempPress->search($this->request->queryParams);
+        $dataProviderAirTempPress->pagination = ['pageSize' => 10];
+
+
+        return $this->render('dashboard', [
             'searchModelNPK' => $searchModelNPK,
             'dataProviderNPK' => $dataProviderNPK,
             'searchModelSMoist' => $searchModelSMoist,
@@ -183,5 +212,54 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionPrediction()
+    {
+        // Create a new HTTP client instance
+        $client = new Client();
+
+        // Send a GET request to the /predict endpoint
+        $response = $client->createRequest()
+            ->setMethod('GET')
+            ->setUrl('http://127.0.0.1:5000/predict')
+            ->send();
+
+        // Check if the request was successful
+        if ($response->isOk) {
+            // Parse the JSON response
+            $data = json_decode($response->content, true);
+
+            // Extract the response data
+            $data = $response->getData();
+
+            $dataProvider = new ArrayDataProvider([
+                'allModels' => $data,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+                'sort' => [
+                    'attributes' => ['timestamp', 'temp', 'smoist', 'moist_state'],
+                ],
+            ]);
+
+            return $this->render('prediction', [
+                'dataProvider' => $dataProvider,
+                'title' => 'Soil Moisture Prediction'
+            ]);
+        } else {
+            // Handle the error case
+            Yii::error('Failed to fetch data from /predict: ' . $response->content);
+            throw new \yii\web\HttpException(500, 'Failed to fetch data from /predict');
+        }
+
+        // Instantiate the httpclient component
+        $client = Yii::$app->httpclient;
+
+        // Send a GET request to the /predict endpoint
+        $response = $client->createRequest()
+            ->setMethod('GET')
+            ->setUrl('/predict')
+            ->send();
     }
 }

@@ -31,6 +31,27 @@ main > .container {
 .air-temp{
     display: block;
 }
+.moist-status{
+    background-color: white;
+    border-radius: 3px;
+    padding: 1rem;
+    box-shadow: 1px 1px 4px #969696;
+}
+#moist-status{
+    color: #212529;
+    font-weight: 400;
+    padding-right: 3vw;
+
+}
+
+#eta-time{
+    color: #212529;
+    font-weight: 400;
+    padding-right: 3vw;
+}
+
+
+
 
 .menunav {
     overflow: hidden;

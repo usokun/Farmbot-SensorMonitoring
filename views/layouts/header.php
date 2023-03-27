@@ -1,11 +1,12 @@
 <?php
+
 use yii\helpers\Html;
 ?>
 <nav class="navbar navbar-transparent navbar-expand-lg navbar-absolute fixed-top" role="navigation-demo">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-wrapper">
-            <a class="navbar-brand" href="#"><?=$this->title;?></a>
+            <a class="navbar-brand" href="#"><?= $this->title; ?></a>
         </div>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,13 +18,15 @@ use yii\helpers\Html;
 
         <div class="collapse navbar-collapse justify-content-end">
             <form class="navbar-form">
-              <span class="bmd-form-group"><div class="input-group no-border">
-                <input type="text" value="" class="form-control" placeholder="Search...">
-                <button type="submit" class="btn btn-white btn-round btn-just-icon">
-                  <i class="material-icons">search</i>
-                  <div class="ripple-container"></div>
-                </button>
-              </div></span>
+                <span class="bmd-form-group">
+                    <div class="input-group no-border">
+                        <input type="text" value="" class="form-control" placeholder="Search...">
+                        <button type="submit" class="btn btn-white btn-round btn-just-icon">
+                            <i class="material-icons">search</i>
+                            <div class="ripple-container"></div>
+                        </button>
+                    </div>
+                </span>
             </form>
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -62,17 +65,17 @@ use yii\helpers\Html;
                         <a class="dropdown-item" href="#">Settings</a>
                         <div class="dropdown-divider"></div>
                         <?=
-                            Yii::$app->user->isGuest ? 
-                                Html::a(
-                                    'Log in',
-                                    ['/site/login'],
-                                    ['class'=>'dropdown-item']
-                                ) : 
-                                Html::a(
-                                    'Log out ('.Yii::$app->user->identity->username.')',
-                                    ['/site/logout'],
-                                    ['class'=>'dropdown-item','data-method'=>'post']
-                                );
+                        Yii::$app->user->isGuest ?
+                            Html::a(
+                                'Log in',
+                                ['/site/login'],
+                                ['class' => 'dropdown-item']
+                            ) :
+                            Html::a(
+                                'Log out (' . Yii::$app->user->identity->username . ')',
+                                ['/site/logout'],
+                                ['class' => 'dropdown-item', 'data-method' => 'post']
+                            );
                         ?>
                     </div>
                 </li>
