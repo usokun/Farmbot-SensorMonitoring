@@ -4,12 +4,14 @@ use yii\helpers\Html;
 use deyraka\materialdashboard\web\MaterialDashboardAsset;
 use yii\web\View;
 use app\assets\AppAsset;
+use yii\bootstrap4\BootstrapPluginAsset;
 
 
 /* @var $this View */
 /* @var $content string */
 
 AppAsset::register($this);
+BootstrapPluginAsset::register($this);
 
 if (class_exists('deyraka\materialdashboard\web\MaterialDashboardAsset')) {
     deyraka\materialdashboard\web\MaterialDashboardAsset::register($this);
@@ -38,7 +40,7 @@ $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/deyraka/yii2
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 
 
 
@@ -63,8 +65,6 @@ $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/deyraka/yii2
         </div>
     </div>
     <?php $this->endBody() ?>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 
 </html>

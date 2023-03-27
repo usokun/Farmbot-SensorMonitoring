@@ -29,6 +29,11 @@ use kartik\grid\ActionColumn as GridActionColumn;
 use kartik\grid\GridView;
 use yii\grid\ActionColumn;
 
+use yii\bootstrap4\Button;
+use yii\bootstrap4\Widget;
+use yii\bootstrap4\NavBar;
+use yii\bootstrap4\Nav;
+
 AppAsset::register($this);
 
 
@@ -61,18 +66,8 @@ $this->title = 'Home';
         $moist_thu = $lora_temp_moist['moist_thu'] . json_encode($this);
         $moist_fri = $lora_temp_moist['moist_fri'] . json_encode($this);
         $moist_sat = $lora_temp_moist['moist_sat'] . json_encode($this);
-
-
         ?>
-
-        <h3>FARMBOT SENSOR MONITORING</h3>
-        <div class="row" style="padding: 14px 14px">
-            <div class="moist-status container-fluid">
-                <span id="moist-status">SOIL MOISTURE STATUS: <span id="moist-status-stat">JUST RIGHT</span></span>
-                <span id="eta">Estimated Time to Water the Soil Today: <span id="eta-time"><?= $temp_fri ?></span></span>
-            </div>
-        </div>
-
+        
         <div id="npk-card" class="row npk">
             <!-- T CARD -->
             <div class="col-lg-6 col-md-6 col-sm-6">
@@ -109,9 +104,7 @@ $this->title = 'Home';
                 )
                 ?>
             </div>
-
-        </div> <!-- id="npk-card" class="row npk" -->
-
+            
         <!-- NPK CHART -->
         <div id="npk-chart" class="row npk">
             <div class="col-lg-12 col-md-12 col-sm-12">
