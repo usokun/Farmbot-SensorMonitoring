@@ -72,28 +72,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        // return $this->render('index');
-        $searchModelNPK = new LoraNpkTSearch();
-        $dataProviderNPK = $searchModelNPK->search($this->request->queryParams);
-        $dataProviderNPK->pagination = ['pageSize' => 10];
-
-        $searchModelSMoist = new SoilMoistTSearch();
-        $dataProviderSMoist = $searchModelSMoist->search($this->request->queryParams);
-        $dataProviderSMoist->pagination = ['pageSize' => 10];
-
-        $searchModelAirTempPress = new AirTempPressTSearch();
-        $dataProviderAirTempPress = $searchModelAirTempPress->search($this->request->queryParams);
-        $dataProviderAirTempPress->pagination = ['pageSize' => 10];
-
+        $data = $this->createAPIRequest();
 
         return $this->render('index', [
-            'searchModelNPK' => $searchModelNPK,
-            'dataProviderNPK' => $dataProviderNPK,
-            'searchModelSMoist' => $searchModelSMoist,
-            'dataProviderSMoist' => $dataProviderSMoist,
-            'searchModelAirTempPress' => $searchModelAirTempPress,
-            'dataProviderAirTempPress' => $dataProviderAirTempPress
-
+            'predictData' => $data,
         ]);
     }
     public function actionDashboard()
@@ -214,12 +196,9 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionPrediction()
+    public function createAPIRequest()
     {
-        // Create a new HTTP client instance
         $client = new Client();
-
-        // Send a GET request to the /predict endpoint
         $response = $client->createRequest()
             ->setMethod('GET')
             ->setUrl('http://127.0.0.1:5000/predict')
@@ -233,26 +212,12 @@ class SiteController extends Controller
             // Extract the response data
             $data = $response->getData();
 
-            $dataProvider = new ArrayDataProvider([
-                'allModels' => $data,
-                'pagination' => [
-                    'pageSize' => 10,
-                ],
-                'sort' => [
-                    'attributes' => ['timestamp', 'temp', 'smoist', 'moist_state'],
-                ],
-            ]);
-
-            return $this->render('prediction', [
-                'dataProvider' => $dataProvider,
-                'title' => 'Soil Moisture Prediction'
-            ]);
+            return $data;
         } else {
             // Handle the error case
             Yii::error('Failed to fetch data from /predict: ' . $response->content);
             throw new \yii\web\HttpException(500, 'Failed to fetch data from /predict');
         }
-
         // Instantiate the httpclient component
         $client = Yii::$app->httpclient;
 
@@ -261,5 +226,24 @@ class SiteController extends Controller
             ->setMethod('GET')
             ->setUrl('/predict')
             ->send();
+    }
+    public function actionPrediction()
+    {
+        $data = $this->createAPIRequest();
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $data,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'attributes' => ['timestamp', 'temp', 'smoist', 'moist_state'],
+            ],
+        ]);
+
+        return $this->render('prediction', [
+            'dataProvider' => $dataProvider,
+            'title' => 'Soil Moisture Prediction'
+        ]);
     }
 }

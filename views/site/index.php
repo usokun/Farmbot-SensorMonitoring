@@ -63,13 +63,39 @@ $this->title = 'Home';
         $moist_sat = $lora_temp_moist['moist_sat'] . json_encode($this);
 
 
+        $state_moist = '';
+        if ($H_v < 35.00) {
+            $state_moist = 'dry';
+        } elseif ($H_v >= 35.00 && $H_v <= 55.00) {
+            $state_moist = 'just right';
+        } else {
+            $state_moist = 'wet';
+        }
+        // echo '<pre>';
+        // print_r($data[0]['moist_state']);
+        // echo '</pre>';
+
+        $data = $predictData;
+
+        $time_to_water = '';
+        $no_schedule = 'No Schedule to water the soil today';
+
+        foreach ($data as $item) {
+            if ($item['moist_state'] === 'dry') {
+                echo 'Timestamp: ' . $item['timestamp'] . PHP_EOL;
+                $time_to_water = $item['timestamp'];
+            } else {
+                $time_to_water = $no_schedule;
+            }
+        }
+
         ?>
 
         <h3>FARMBOT SENSOR MONITORING</h3>
         <div class="row" style="padding: 14px 14px">
             <div class="moist-status container-fluid">
-                <span id="moist-status">SOIL MOISTURE STATUS: <span id="moist-status-stat">JUST RIGHT</span></span>
-                <span id="eta">Estimated Time to Water the Soil Today: <span id="eta-time"><?= $temp_fri ?></span></span>
+                <span id="moist-status">SOIL MOISTURE STATUS: <span id="moist-status-stat"><?= strtoupper($state_moist); ?></span></span>
+                <span id="eta">Next schedule to water the soil: <span id="eta-time"><?= $time_to_water ?></span></span>
             </div>
         </div>
 
