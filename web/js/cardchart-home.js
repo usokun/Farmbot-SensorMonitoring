@@ -1,41 +1,11 @@
 //SCRIPT FOR LINE AND BAR CHART
-var npkdata = {
-    // A labels array that can contain any sort of values
-    labels: ['Temp', 'Humid', 'pH', 'N', 'P', 'K'],
-    // Our series array that contains series objects or in this case series data arrays
-    series: [
-        [prevWeek_T, prevWeek_H, prevWeek_PH, prevWeek_N, prevWeek_P, prevWeek_K],
-        [thisWeek_T, thisWeek_H, thisWeek_PH, thisWeek_N, thisWeek_P, thisWeek_K]
-
-    ]
-};
-
-var smoistdata = {
+var temp_moist_data = {
     // A labels array that can contain any sort of values
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     // Our series array that contains series objects or in this case series data arrays
     series: [
-        [smoist_sun, smoist_mon, smoist_tue, smoist_wed, smoist_thu, smoist_fri, smoist_sat],
-
-    ]
-};
-
-var air_temp_data = {
-    // A labels array that can contain any sort of values
-    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-    // Our series array that contains series objects or in this case series data arrays
-    series: [
-        [atemp_sun, atemp_mon, atemp_tue, atemp_wed, atemp_thu, atemp_fri, atemp_sat],
-
-    ]
-};
-
-var air_press_data = {
-    // A labels array that can contain any sort of values
-    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-    // Our series array that contains series objects or in this case series data arrays
-    series: [
-        [apress_sun, apress_mon, apress_tue, apress_wed, apress_thu, apress_fri, apress_sat]
+        [temp_sun, temp_mon, temp_tue, temp_wed, temp_thu, temp_fri, temp_sat],
+        [moist_sun, moist_mon, moist_tue, moist_wed, moist_thu, moist_fri, moist_sat],
 
     ]
 };
@@ -70,10 +40,8 @@ var options = {
 // that is resolving to our chart container element. The Second parameter
 // is the actual data object.
 // new Chartist.Bar('.ct-chart', data, options);
-new Chartist.Bar('#npkchart', npkdata, options);
-new Chartist.Bar('#smoistchart', smoistdata, options);
-new Chartist.Bar('#airtempchart', air_temp_data, options);
-new Chartist.Bar('#airpresschart', air_press_data, options);
+new Chartist.Bar('#temp-moist', temp_moist_data, options);
+
 // new Chartist.Line('#daychart', data, options);
 // new Chartist.Line('#yourchart', data, options);
 // new Chartist.Bar('#herchart', data, options);

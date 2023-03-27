@@ -1,11 +1,12 @@
 <?php
+
 use yii\helpers\Html;
 ?>
 <nav class="navbar navbar-transparent navbar-expand-lg navbar-absolute fixed-top" role="navigation-demo">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-wrapper">
-            <a class="navbar-brand" href="#"><?=$this->title;?></a>
+            <a class="navbar-brand" href="#"><?= $this->title; ?></a>
         </div>
 
         <div class="collapse navbar-collapse justify-content-end">
@@ -21,17 +22,17 @@ use yii\helpers\Html;
                         <a class="dropdown-item" href="#">Profile</a>
                         <div class="dropdown-divider"></div>
                         <?=
-                            Yii::$app->user->isGuest ? 
-                                Html::a(
-                                    'Log in',
-                                    ['/site/login'],
-                                    ['class'=>'dropdown-item']
-                                ) : 
-                                Html::a(
-                                    'Log out ('.Yii::$app->user->identity->username.')',
-                                    ['/site/logout'],
-                                    ['class'=>'dropdown-item','data-method'=>'post']
-                                );
+                        Yii::$app->user->isGuest ?
+                            Html::a(
+                                'Log in',
+                                ['/site/login'],
+                                ['class' => 'dropdown-item']
+                            ) :
+                            Html::a(
+                                'Log out (' . Yii::$app->user->identity->username . ')',
+                                ['/site/logout'],
+                                ['class' => 'dropdown-item', 'data-method' => 'post']
+                            );
                         ?>
                     </div>
                 </li>
