@@ -9,7 +9,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
     public static function tableName()
     {
-        return 't_user';
+        return 'fsm_users';
     }
 
     /**
@@ -67,7 +67,6 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     public static function findByUsername($username)
     {
         return static::findOne(['username' => $username]);
-
     }
 
     /**
@@ -100,16 +99,17 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
      * @param string $password password to validate
      * @return bool if password provided is valid for current user
      */
+
     public function validatePassword($password)
     {
-        return Yii::$app->security->validatePassword($password, $this->password);
+        return $this->password === $password;
     }
-    public function setPassword($password)
-    {
-        $this->password = Yii::$app->security->generatePasswordHash($password);
-    }
-    public function generateAuthKey()
-    {
-        $this->auth_key = Yii::$app->security->generateRandomString();
-    }
+    // public function setPassword($password)
+    // {
+    //     $this->password = Yii::$app->security->generatePasswordHash($password);
+    // }
+    // public function generateAuthKey()
+    // {
+    //     $this->auth_key = Yii::$app->security->generateRandomString();
+    // }
 }

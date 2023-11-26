@@ -22,10 +22,10 @@ use yii\helpers\Html;
                 ['label' => 'Dashboard', 'icon' => 'dashboard', 'url' => ['site/dashboard']],
                 ['label' => 'Prediction', 'icon' => 'query_stats', 'url' => ['site/prediction']],
                 ['label' => 'About', 'icon' => 'info', 'url' => ['site/about']],
-                Yii::$app->user->isGuest ?
-                    ['label' => 'Login', 'icon' => 'person', 'url' => '/site/login']
-                    :
-                    ['label' => 'Logout (' . Yii::$app->user->identity->username . ')', 'icon' => 'person', 'url' => '/site/logout']
+                //     Yii::$app->user->isGuest ?
+                //         ['label' => 'Login', 'icon' => 'person', 'url' => '/site/login']
+                //         :
+                //         ['label' => 'Logout (' . Yii::$app->user->identity->username . ')', 'icon' => 'person', 'url' => '/site/logout']
             ]
         ]); ?>
     </div>
