@@ -21,6 +21,7 @@ use yii\web\NotFoundHttpException;
 use yii\data\ArrayDataProvider;
 
 
+
 class SiteController extends Controller
 {
     /**
@@ -199,45 +200,86 @@ class SiteController extends Controller
     public function createAPIRequest()
     {
         $client = new Client();
-        $response = $client->createRequest()
+
+        $request = $client->createRequest()
             ->setMethod('GET')
-            ->setUrl('http://127.0.0.1:5000/predict')
-            ->send();
+            ->setUrl('http://127.0.0.1:5000/predict');
 
-        // Check if the request was successful
-        if ($response->isOk) {
-            // Parse the JSON response
-            $data = json_decode($response->content, true);
+        $url = $request->getUrl();
+        $method = $request->getMethod();
+        $headers = $request->getHeaders() ? $request->getHeaders()->toArray() : [];
+        $data = $request->getData() ? $request->getData()->toArray() : [];
 
-            // Extract the response data
-            $data = $response->getData();
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_CUSTOMREQUEST => $method,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_POSTFIELDS => $data,
+        ]);
 
-            return $data;
-        } else {
-            // Handle the error case
-            Yii::error('Failed to fetch data from /predict: ' . $response->content);
-            throw new \yii\web\HttpException(500, 'Failed to fetch data from /predict');
+        $handles[] = $ch;
+
+        $mh = curl_multi_init();
+        curl_multi_add_handle($mh, $ch);
+
+        $active = null;
+        do {
+            $mrc = curl_multi_exec($mh, $active);
+        } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+
+        while ($active && $mrc == CURLM_OK) {
+            if (curl_multi_select($mh) != -1) {
+                do {
+                    $mrc = curl_multi_exec($mh, $active);
+                } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+            }
         }
-        // Instantiate the httpclient component
-        $client = Yii::$app->httpclient;
 
-        // Send a GET request to the /predict endpoint
-        $response = $client->createRequest()
-            ->setMethod('GET')
-            ->setUrl('/predict')
-            ->send();
+        $responses = [];
+        foreach ($handles as $ch) {
+            $responses[] = curl_multi_getcontent($ch);
+            curl_multi_remove_handle($mh, $ch);
+        }
+        curl_multi_close($mh);
+
+        // Process responses
+        foreach ($responses as $response) {
+            // Handle responses here
+            $data = json_decode($response, true);
+            if ($data !== null) {
+                return $data;
+            } else {
+                Yii::error('Failed to parse JSON response: ' . $response);
+                throw new \yii\web\HttpException(500, 'Failed to parse JSON response');
+            }
+        }
+
+        Yii::error('No response received');
+        throw new \yii\web\HttpException(500, 'No response received');
     }
+
+
     public function actionPrediction()
     {
+        // Call the sendSoilHumidityToFlask function
         $data = $this->createAPIRequest();
+        // You can return any response you want, depending on the result of the function
+        // For example, if the function returns data, you can return it as JSON
+
+        // Yii::$app->response->format = Response::FORMAT_JSON;
+        // return $data;
 
         $dataProvider = new ArrayDataProvider([
             'allModels' => $data,
             'pagination' => [
-                'pageSize' => 10,
+                'pageSize' => 500,
             ],
             'sort' => [
-                'attributes' => ['timestamp', 'temp', 'smoist', 'moist_state'],
+                // 'attributes' => ['timestamp', 'air_temp', 'air_humidity', 'soil_humidity', 'humidity_state'],
+                'attributes' => ['timestamp', 'air_temp', 'soil_humidity', 'humidity_state'],
             ],
         ]);
 

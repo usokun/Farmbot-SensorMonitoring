@@ -26,21 +26,34 @@ $this->title = $title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
+
                 'attribute' => 'timestamp',
                 'value' => function ($model) {
-                    return Yii::$app->formatter->asDatetime($model['timestamp']);
+                    // Convert milliseconds to seconds by dividing by 1000
+                    $timestampInSeconds = $model['timestamp'] / 1000;
+
+                    // Create a DateTime object with the timestamp in UTC
+                    $dateTime = new DateTime('@' . $timestampInSeconds);
+                    $dateTime->setTimezone(new DateTimeZone('Asia/Bangkok')); // Set the appropriate time zone identifier
+
+                    // Format the DateTime object as a date
+                    return $dateTime->format('Y-m-d H:i:s');
                 },
+                'label' => 'Time'
+
             ],
             [
-                'attribute' => 'temp',
-                'label' => 'Forcasted Temprature'
+                'attribute' => 'air_temp',
+                'label' => 'Forcasted Air Temprature',
+                'format' => ['decimal', 2],
             ],
             [
-                'attribute' => 'smoist',
-                'label' => 'Predicted Soil Moisture'
+                'attribute' => 'soil_humidity',
+                'label' => 'Predicted Soil Moisture',
+                'format' => ['decimal', 2],
             ],
             [
-                'attribute' => 'moist_state',
+                'attribute' => 'humidity_state',
                 'label' => 'Predicted Soil State'
             ],
         ],

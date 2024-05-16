@@ -65,11 +65,11 @@ $this->title = 'Home';
 
         $state_moist = '';
         if ($H_v < 35.00) {
-            $state_moist = 'dry';
+            $state_moist = 'Dry';
         } elseif ($H_v >= 35.00 && $H_v <= 55.00) {
-            $state_moist = 'just right';
+            $state_moist = 'Just Right';
         } else {
-            $state_moist = 'wet';
+            $state_moist = 'Wet';
         }
         // echo '<pre>';
         // print_r($data[0]['moist_state']);
@@ -81,13 +81,20 @@ $this->title = 'Home';
         $no_schedule = 'No Schedule to water the soil today';
 
         foreach ($data as $item) {
-            if ($item['moist_state'] === 'dry') {
-                echo 'Timestamp: ' . $item['timestamp'] . PHP_EOL;
-                $time_to_water = $item['timestamp'];
+            if ($item['humidity_state'] === 'Dry') {
+                // echo 'Timestamp: ' . $item['timestamp'] . PHP_EOL;
+                // Assuming $item['timestamp'] is in milliseconds format
+                $milliseconds = $item['timestamp'];
+                // Convert milliseconds to seconds and create a DateTime object
+                $datetime = DateTime::createFromFormat('U', $milliseconds / 1000);
+                // Format datetime as desired
+                $time_to_water = $datetime->format('d-m-Y H:i');
             } else {
                 $time_to_water = $no_schedule;
             }
         }
+
+
 
         ?>
 
