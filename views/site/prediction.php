@@ -48,6 +48,11 @@ $this->title = $title;
                 'format' => ['decimal', 2],
             ],
             [
+                'attribute' => 'air_humidity',
+                'label' => 'Forcasted Air Humidity',
+                'format' => ['decimal', 2],
+            ],
+            [
                 'attribute' => 'soil_humidity',
                 'label' => 'Predicted Soil Moisture',
                 'format' => ['decimal', 2],

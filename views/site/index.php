@@ -64,9 +64,9 @@ $this->title = 'Home';
 
 
         $state_moist = '';
-        if ($H_v < 35.00) {
+        if ($H_v < 45.00) {
             $state_moist = 'Dry';
-        } elseif ($H_v >= 35.00 && $H_v <= 55.00) {
+        } elseif ($H_v >= 45.10 && $H_v <= 53.00) {
             $state_moist = 'Just Right';
         } else {
             $state_moist = 'Wet';
