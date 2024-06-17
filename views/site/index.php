@@ -3,31 +3,11 @@
 /* @var $this yii\web\View */
 
 use deyraka\materialdashboard\widgets\Cardstats;
-use deyraka\materialdashboard\widgets\Card;
 use deyraka\materialdashboard\widgets\CardChart;
-use deyraka\materialdashboard\widgets\Progress;
-
-use yii\helpers\Url;
-use yii\helpers\Html;
-use yii\i18n\Formatter;
-use yii\widgets\DetailView;
-
 use app\models\LoraNpkT;
-use app\models\LoraNpkTSearch;
-
-use app\models\SoilMoistT;
-use app\models\SoilMoistTSearch;
-
 use app\models\NpkThisWeekTempMoist;
-
-
-use app\models\NpkModel;
-
 use app\assets\AppAsset;
-
-use kartik\grid\ActionColumn as GridActionColumn;
-use kartik\grid\GridView;
-use yii\grid\ActionColumn;
+use app\models\JadwalNyiram;
 
 AppAsset::register($this);
 
@@ -63,46 +43,49 @@ $this->title = 'Home';
         $moist_sat = $lora_temp_moist['moist_sat'] . json_encode($this);
 
 
-        $state_moist = '';
-        if ($H_v < 45.00) {
-            $state_moist = 'Dry';
-        } elseif ($H_v >= 45.10 && $H_v <= 53.00) {
-            $state_moist = 'Just Right';
-        } else {
-            $state_moist = 'Wet';
-        }
+        // $state_moist = '';
+        // if ($H_v < 45.00) {
+        //     $state_moist = 'Kering';
+        // } elseif ($H_v >= 45.10 && $H_v <= 53.00) {
+        //     $state_moist = 'Pas';
+        // } else {
+        //     $state_moist = 'Basah';
+        // }
         // echo '<pre>';
         // print_r($data[0]['moist_state']);
         // echo '</pre>';
 
         $data = $predictData;
+        $latest_data = end($data);
+        $h_state = $latest_data->humidity_state;
 
         $time_to_water = '';
-        $no_schedule = 'No Schedule to water the soil today';
+        $no_schedule = 'Tidak Ada Jadwal Penyiraman Hari Ini';
 
         foreach ($data as $item) {
-            if ($item['humidity_state'] === 'Dry') {
-                // echo 'Timestamp: ' . $item['timestamp'] . PHP_EOL;
-                // Assuming $item['timestamp'] is in milliseconds format
-                $milliseconds = $item['timestamp'];
-                // Convert milliseconds to seconds and create a DateTime object
-                $datetime = DateTime::createFromFormat('U', $milliseconds / 1000);
-                // Format datetime as desired
-                $time_to_water = $datetime->format('d-m-Y H:i');
+            if ($data = null) {
+                echo "No data Available";
             } else {
-                $time_to_water = $no_schedule;
+                if ($item['humidity_state'] === 'Kering') {
+                    // Assuming $item['timestamp'] is in milliseconds format
+                    $milliseconds = $item['timestamp'];
+                    // Convert milliseconds to seconds and create a DateTime object
+                    $datetime = DateTime::createFromFormat('U', $milliseconds / 1000);
+                    // Format datetime as desired
+                    $time_to_water = $datetime->format('d-m-Y H:i');
+                } else {
+                    $time_to_water = $no_schedule;
+                }
             }
         }
-
-
 
         ?>
 
         <h3>FARMBOT SENSOR MONITORING</h3>
         <div class="row" style="padding: 14px 14px">
             <div class="moist-status container-fluid">
-                <span id="moist-status">SOIL MOISTURE STATUS: <span id="moist-status-stat"><?= strtoupper($state_moist); ?></span></span>
-                <span id="eta">Next schedule to water the soil: <span id="eta-time"><?= $time_to_water ?></span></span>
+                <span id="moist-status">Status Kelembaban Tanah: <span id="moist-status-stat"></span><?= $h_state ?></span>
+                <span id="eta">Jadwal Penyiraman Selanjutnya: <span id="eta-time"><?= $time_to_water ?></span></span>
             </div>
         </div>
 
@@ -114,7 +97,7 @@ $this->title = 'Home';
                     [
                         "color" => Cardstats::COLOR_PRIMARY,
                         "headerIcon" => "device_thermostat",
-                        "title" => "Temperature",
+                        "title" => "Suhu",
                         "subtitle" => $T_v,
                         "footerIcon" => "",
                         "footerText" => "25 - 32 degree is expected. ",
@@ -132,7 +115,7 @@ $this->title = 'Home';
                     [
                         "color" => Cardstats::COLOR_PRIMARY,
                         "headerIcon" => "water_drop",
-                        "title" => "Soil Moisture",
+                        "title" => "Kelembaban Tanah",
                         "subtitle" => $H_v,
                         "footerIcon" => "",
                         "footerText" => "10% - 80% is expected. ",
@@ -154,8 +137,8 @@ $this->title = 'Home';
                         "idchart" => 'temp-moist',
                         "color" => CardChart::COLOR_INFO,
                         "url" => "",
-                        "title" => "SOIL CONDITION CHART",
-                        "description" => "This chart displays this week's temperature(white) and soil moisture data(red)",
+                        "title" => "Chart Kondisi Tanah",
+                        "description" => "Chart ini menampilkan kondisi suhu(putih) dan data kelembaban tanah(merah) pada minggu ini",
                     ]
                 )
                 ?>

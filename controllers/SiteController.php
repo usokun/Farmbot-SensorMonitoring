@@ -17,9 +17,11 @@ use app\models\SoilMoistTSearch;
 use app\models\SoilMoistP;
 use app\models\AirTempPressT;
 use app\models\AirTempPressTSearch;
+use app\models\JadwalNyiram;
 use yii\web\NotFoundHttpException;
+use yii\helpers\Json;
+use app\models\PredictionForm;
 use yii\data\ArrayDataProvider;
-
 
 
 class SiteController extends Controller
@@ -73,7 +75,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $data = $this->createAPIRequest();
+        // $data = $this->createAPIRequest();
+        $data = JadwalNyiram::find()->all();
 
         return $this->render('index', [
             'predictData' => $data,
@@ -169,34 +172,6 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    // /**
-    //  * Displays contact page.
-    //  *
-    //  * @return Response|string
-    //  */
-    // public function actionContact()
-    // {
-    //     $model = new ContactForm();
-    //     if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-    //         Yii::$app->session->setFlash('contactFormSubmitted');
-
-    //         return $this->refresh();
-    //     }
-    //     return $this->render('contact', [
-    //         'model' => $model,
-    //     ]);
-    // }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
-
     public function createAPIRequest()
     {
         $client = new Client();
@@ -261,7 +236,6 @@ class SiteController extends Controller
         throw new \yii\web\HttpException(500, 'No response received');
     }
 
-
     public function actionPrediction()
     {
         // Call the sendSoilHumidityToFlask function
@@ -286,6 +260,66 @@ class SiteController extends Controller
         return $this->render('prediction', [
             'dataProvider' => $dataProvider,
             'title' => 'Soil Moisture Prediction'
+        ]);
+    }
+
+    public function actionCreateApiPredictCustom($sh = null, $st = null)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if ($sh === null || $st === null) {
+            return ['error' => 'Missing required parameters: sh, st'];
+        }
+
+        $url = "http://127.0.0.1:5000/predict-custom";
+
+        $client = new \yii\httpclient\Client();
+
+        try {
+            $response = $client->createRequest()
+                ->setMethod('GET')
+                ->setUrl($url)
+                ->setData(['sh' => $sh, 'st' => $st])
+                ->send();
+
+            if ($response->isOk) {
+                return $response->getData();
+            } else {
+                return ['error' => 'Failed to get prediction data. Status code: ' . $response->getStatusCode()];
+            }
+        } catch (\Exception $e) {
+            return ['error' => 'Failed to get prediction data: ' . $e->getMessage()];
+        }
+    }
+
+    public function actionPrediksiJadwal()
+    {
+        $model = new PredictionForm();
+
+        $data = JadwalNyiram::find()->all();
+        $startOfDay = strtotime("today midnight") * 1000;
+        $endOfDay = strtotime("tomorrow midnight") * 1000 - 1;
+
+        // Check availability of today's data in 'jadwal_nyiram' table
+        $today_data = JadwalNyiram::find()
+            ->where(['between', 'time', $startOfDay, $endOfDay])
+            ->all();
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $today_data,
+            'pagination' => [
+                'pageSize' => 24,
+            ],
+            'sort' => [
+                'attributes' => ['time', 'humidity_value', 'humidity_state'],
+            ],
+        ]);
+
+        return $this->render('prediksi-jadwal', [
+            'dataProvider' => $dataProvider,
+            'data' => $today_data,
+            'model' => $model,
+            'title' => 'Data Prediksi Jadwal Penyiraman Hari ini.'
         ]);
     }
 }

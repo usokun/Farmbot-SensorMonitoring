@@ -5,6 +5,9 @@ use deyraka\materialdashboard\web\MaterialDashboardAsset;
 use yii\web\View;
 use app\assets\AppAsset;
 use yii\bootstrap4\BootstrapPluginAsset;
+use yii\bootstrap4\BootstrapAsset;
+use yii\web\YiiAsset;
+use yii\helpers\Url;
 
 
 /* @var $this View */
@@ -12,6 +15,11 @@ use yii\bootstrap4\BootstrapPluginAsset;
 
 AppAsset::register($this);
 BootstrapPluginAsset::register($this);
+
+YiiAsset::register($this);
+BootstrapAsset::register($this);
+
+$this->registerJsFile('@web/js/custom.js', ['depends' => [YiiAsset::class]]);
 
 if (class_exists('deyraka\materialdashboard\web\MaterialDashboardAsset')) {
     deyraka\materialdashboard\web\MaterialDashboardAsset::register($this);

@@ -20,6 +20,7 @@ use yii\helpers\Html;
             'items' => [
                 ['label' => 'Home', 'icon' => 'home', 'url' => ['/']],
                 ['label' => 'Dashboard', 'icon' => 'dashboard', 'url' => ['site/dashboard']],
+                ['label' => 'Jadwal Penyiraman Hari Ini', 'icon' => 'dashboard', 'url' => ['site/prediksi-jadwal']],
                 ['label' => 'Prediction', 'icon' => 'query_stats', 'url' => ['site/prediction']],
                 ['label' => 'About', 'icon' => 'info', 'url' => ['site/about']],
                 //     Yii::$app->user->isGuest ?

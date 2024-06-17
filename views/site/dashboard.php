@@ -136,12 +136,10 @@ $this->title = 'Dashboard';
         <br>
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="btn-group" role="group" aria-label="Basic example">
-                <button data-state="active" id="all-btn" type="button" class="btn btn-secondary" style="background-color: #df286a; color: white; font-weight:600;">All Data</button>
-                <button data-state="inactive" id="npk-btn" type="button" class="btn btn-secondary" style="background-color: white;">NPK Data</button>
-                <button data-state="inactive" id="smoist-btn" type="button" class="btn btn-secondary" style="background-color: white; ">Soil
-                    Moisture Data</button>
-                <button data-state="inactive" id="air-temp-btn" type="button" class="btn btn-secondary" style="background-color: white;">Air
-                    Temp. & Press. Data</button>
+                <button data-state="active" id="all-btn" type="button" class="btn btn-secondary" style="background-color: #df286a; color: white; font-weight:600;">Semua Data</button>
+                <button data-state="inactive" id="npk-btn" type="button" class="btn btn-secondary" style="background-color: white;">Data NPK</button>
+                <button data-state="inactive" id="smoist-btn" type="button" class="btn btn-secondary" style="background-color: white; ">Data Kelembaban Tanah</button>
+                <button data-state="inactive" id="air-temp-btn" type="button" class="btn btn-secondary" style="background-color: white;">Data Suhu dan Tekanan Atmosfer Udara</button>
             </div>
         </div>
 
@@ -154,7 +152,7 @@ $this->title = 'Dashboard';
                     [
                         "color" => Cardstats::COLOR_PRIMARY,
                         "headerIcon" => "device_thermostat",
-                        "title" => "Temperature",
+                        "title" => "Suhu Tanah",
                         "subtitle" => $T_v,
                         "footerIcon" => "",
                         "footerText" => "25 - 32 degree is expected. ",
@@ -172,7 +170,7 @@ $this->title = 'Dashboard';
                     [
                         "color" => Cardstats::COLOR_PRIMARY,
                         "headerIcon" => "water_drop",
-                        "title" => "Humidity",
+                        "title" => "Kelemababan Tanah",
                         "subtitle" => $H_v,
                         "footerIcon" => "",
                         "footerText" => "10% - 80% is expected. ",
@@ -226,7 +224,7 @@ $this->title = 'Dashboard';
                     [
                         "color" => Cardstats::COLOR_PRIMARY,
                         "headerIcon" => "science",
-                        "title" => "Phosphorus (P)",
+                        "title" => "Fosfor (P)",
                         "subtitle" => $P_v,
                         "footerIcon" => "",
                         "footerText" => "10 - 100 is expected. ",
@@ -244,7 +242,7 @@ $this->title = 'Dashboard';
                     [
                         "color" => Cardstats::COLOR_PRIMARY,
                         "headerIcon" => "science",
-                        "title" => "Potassium (K)",
+                        "title" => "Potasium (K)",
                         "subtitle" => $P_v,
                         "footerIcon" => "",
                         "footerText" => "50 - 200 is expected. ",
@@ -327,7 +325,7 @@ $this->title = 'Dashboard';
                     [
                         "color" => Cardstats::COLOR_PRIMARY,
                         "headerIcon" => "opacity",
-                        "title" => "Soil Moisture",
+                        "title" => "Kelembaban Tanah",
                         "subtitle" => $SMoist_v,
                         "footerIcon" => "",
                         "footerText" => "10% - 90% is expected. ",
@@ -407,7 +405,7 @@ $this->title = 'Dashboard';
                     [
                         "color" => Cardstats::COLOR_PRIMARY,
                         "headerIcon" => "thermostat",
-                        "title" => "Air Temperature",
+                        "title" => "Suhu Udara",
                         "subtitle" => $ATemp_v,
                         "footerIcon" => "",
                         "footerText" => "23 - 26 degree is expected. ",
@@ -425,10 +423,10 @@ $this->title = 'Dashboard';
                     [
                         "color" => Cardstats::COLOR_PRIMARY,
                         "headerIcon" => "compress",
-                        "title" => "Air Pressure",
+                        "title" => "Tekanan Atmosfer",
                         "subtitle" => $APress_v,
                         "footerIcon" => "",
-                        "footerText" => "23 - 26 degree is expected. ",
+                        "footerText" => "",
                         // "footerUrl" => Url::to(['site/login']),
                         "footerTextType" => Cardstats::TYPE_INFO,
                     ]
@@ -447,7 +445,7 @@ $this->title = 'Dashboard';
                         "idchart" => 'airtempchart',
                         "color" => CardChart::COLOR_PRIMARY,
                         "url" => "",
-                        "title" => "AIR TEMPERATURE CHART DATA",
+                        "title" => " CHART DATA SUHU UDARA",
                         "description" => "This chart displays This Week's Air Temperature Data",
                     ]
                 )
@@ -480,7 +478,7 @@ $this->title = 'Dashboard';
                     'color' => Card::COLOR_INFO,
                     'headerIcon' => 'table_rows',
                     'collapsable' => false,
-                    'title' => 'AIR TEMPERATURE & PRESSURE TABLE',
+                    'title' => 'SUHU DAN TEKANAN ATMOSFER UDARA',
                     'titleTextType' => Card::TYPE_INFO,
                     'showFooter' => true,
                     'footerContent' => '',
