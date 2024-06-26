@@ -57,4 +57,45 @@ $(document).ready(function () {
   });
 
   // Other custom JavaScript logic can go here
+
+  // Handle form submission with AJAX
+  $("#manual-predict-button").on("click", function (e) {
+    e.preventDefault(); // Prevent default form submission
+
+    // Make AJAX request to predict-to-save endpoint
+    var url = "http://127.0.0.1:5000/predict-to-save";
+
+    fetch(url, {
+      method: "POST", // Adjust the method as per your API requirements (POST, GET, etc.)
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Body can be added if there is any payload to be sent
+      // body: JSON.stringify({}),
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json(); // Parse JSON response
+      })
+      .then(function (data) {
+        // Handle the data received from the API
+        if (data.error) {
+          alert("Error: " + data.error); // Replace with your error handling logic
+        } else {
+          alert("Prediction saved successfully."); // Replace with success message or handling logic
+          location.reload();
+        }
+
+        // Log the response data for debugging
+        console.log(data);
+      })
+      .catch(function (error) {
+        console.error("Error occurred while making prediction request:", error);
+        alert("Error occurred while making prediction request.");
+      });
+
+    return false;
+  });
 });

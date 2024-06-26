@@ -42,50 +42,75 @@ $this->title = 'Home';
         $moist_fri = $lora_temp_moist['moist_fri'] . json_encode($this);
         $moist_sat = $lora_temp_moist['moist_sat'] . json_encode($this);
 
-
-        // $state_moist = '';
-        // if ($H_v < 45.00) {
-        //     $state_moist = 'Kering';
-        // } elseif ($H_v >= 45.10 && $H_v <= 53.00) {
-        //     $state_moist = 'Pas';
+        // if (!empty($predictData)) {
+        //     $data = $predictData;
         // } else {
-        //     $state_moist = 'Basah';
+        //     throw new Exception('No data found');
         // }
-        // echo '<pre>';
-        // print_r($data[0]['moist_state']);
-        // echo '</pre>';
+
+        // if (!empty($jadwalData)) {
+        //     $data_jadwal = $jadwalData;
+        // } else {
+        //     throw new Exception('No data found');
+        // }
 
         $data = $predictData;
+        $data_jadwal = $jadwalData;
+
         $latest_data = end($data);
         $h_state = $latest_data->humidity_state;
 
-        $time_to_water = '';
+        $time_to_water_array = [];
+
+        $day_map = [
+            'Mon' => 'Senin',
+            'Tue' => 'Selasa',
+            'Wed' => 'Rabu',
+            'Thu' => 'Kamis',
+            'Fri' => 'Jumat',
+            'Sat' => 'Sabtu',
+            'Sun' => 'Minggu'
+        ];
+
         $no_schedule = 'Tidak Ada Jadwal Penyiraman Hari Ini';
 
-        foreach ($data as $item) {
-            if ($data = null) {
+        foreach ($data_jadwal as $item) {
+            if ($data_jadwal == null) {
                 echo "No data Available";
             } else {
-                if ($item['humidity_state'] === 'Kering') {
-                    // Assuming $item['timestamp'] is in milliseconds format
-                    $milliseconds = $item['timestamp'];
-                    // Convert milliseconds to seconds and create a DateTime object
-                    $datetime = DateTime::createFromFormat('U', $milliseconds / 1000);
-                    // Format datetime as desired
-                    $time_to_water = $datetime->format('d-m-Y H:i');
-                } else {
-                    $time_to_water = $no_schedule;
-                }
+
+                $milliseconds = $item['time'];
+
+                // Convert milliseconds to seconds and create a DateTime object
+                $datetime = DateTime::createFromFormat('U', $milliseconds / 1000);
+                // Set the timezone to UTC
+                $datetime->setTimezone(new DateTimeZone('UTC'));
+                // Convert to local timezone (UTC+7)
+                $datetime->setTimezone(new DateTimeZone('Asia/Jakarta'));
+                // Format datetime as desired
+                $day = $datetime->format('D');
+                $formatted_time = $datetime->format('M Y H:i');
+                // Replace the English day with the Indonesian day
+                $formatted_time_with_day = $day_map[$day] . ', ' . $formatted_time;
+                $time_to_water_array[] = $formatted_time_with_day;
             }
         }
 
+
         ?>
+
+
 
         <h3>FARMBOT SENSOR MONITORING</h3>
         <div class="row" style="padding: 14px 14px">
             <div class="moist-status container-fluid">
                 <span id="moist-status">Status Kelembaban Tanah: <span id="moist-status-stat"></span><?= $h_state ?></span>
-                <span id="eta">Jadwal Penyiraman Selanjutnya: <span id="eta-time"><?= $time_to_water ?></span></span>
+                <span id="eta">Jadwal Penyiraman Selanjutnya: <span id="eta-time"></span><?php if (empty($time_to_water_array[0])) {
+                                                                                                echo "Tidak Ada Jadwal Penyiraman Hari ini";
+                                                                                            } else {
+                                                                                                echo $time_to_water_array[0];
+                                                                                            } ?>
+                </span>
             </div>
         </div>
 

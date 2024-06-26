@@ -44,7 +44,7 @@ class ApiController extends Controller
         return $data;
     }
 
-    public function actionGetJadwalNyiram()
+    public function actionCheckJadwalNyiram()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -58,6 +58,30 @@ class ApiController extends Controller
             ->exists();
 
         if ($is_today_data_available) {
+            $data['status'] = 1; // Today's data is available
+        } else {
+            $data['status'] = 0; // Today's data is not available
+        }
+        return $data;
+    }
+
+    public function actionCheckCurrentHourJadwalNyiram()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+
+        $currentTimestamp = time();
+
+        // Calculate the start and end of the current hour
+        $startOfHour = strtotime(date('Y-m-d H:00:00', $currentTimestamp)) * 1000;
+        $endOfHour = strtotime(date('Y-m-d H:59:59', $currentTimestamp)) * 1000;
+
+        // Check if data is available for the current hour
+        $is_current_hour_data_available = JadwalNyiram::find()
+            ->where(['between', 'time', $startOfHour, $endOfHour])
+            ->exists();
+
+        if ($is_current_hour_data_available) {
             $data['status'] = 1; // Today's data is available
         } else {
             $data['status'] = 0; // Today's data is not available
@@ -81,6 +105,29 @@ class ApiController extends Controller
         return $today_data;
     }
 
+    public function actionGetCurrentHourJadwal()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $currentTimestamp = time();
+
+        // Calculate the start and end of the current hour
+        $startOfHour = strtotime(date('Y-m-d H:00:00', $currentTimestamp)) * 1000;
+        $endOfHour = strtotime(date('Y-m-d H:59:59', $currentTimestamp)) * 1000;
+
+        // Check if data is available for the current hour
+        $current_hour_data = JadwalNyiram::find()
+            ->where(['between', 'time', $startOfHour, $endOfHour])
+            ->all();
+
+        if ($current_hour_data) {
+            $data['status'] = 1; // Today's data is available
+        } else {
+            $data['status'] = 0; // Today's data is not available
+        }
+        return $data;
+    }
+
     public function actionSaveTodayJadwal()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -93,6 +140,8 @@ class ApiController extends Controller
                 'message' => 'No data received',
             ];
         }
+
+        $is_available = $this->actionCheckCurrentHourJadwalNyiram();
 
         foreach ($data as $entry) {
             $model = new JadwalNyiram();
@@ -113,5 +162,28 @@ class ApiController extends Controller
             'status' => 'success',
             'message' => 'Data saved successfully',
         ];
+    }
+
+    public function actionDeleteTodayJadwal()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $currentTimestamp = time();
+
+        // Calculate the start and end of the current hour
+        $startOfHour = strtotime(date('Y-m-d H:00:00', $currentTimestamp));
+        $endOfHour = strtotime(date('Y-m-d H:59:59', $currentTimestamp));
+
+        // Logging timestamps for debugging
+        Yii::info("Start of hour: $startOfHour", __METHOD__);
+        Yii::info("End of hour: $endOfHour", __METHOD__);
+
+        // Check if data is available for the current hour and delete it
+        $deleteCount = JadwalNyiram::deleteAll(['between', 'time', $startOfHour, $endOfHour]);
+
+        // Logging the result of the delete operation
+        Yii::info("Deleted rows count: $deleteCount", __METHOD__);
+
+        return ['deleted' => $deleteCount];
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-use yii\helpers\Html;
-use yii\httpclient\Client;
 use kartik\grid\GridView;
 use deyraka\materialdashboard\widgets\Card;
 use deyraka\materialdashboard\widgets\Cardstats;
@@ -70,11 +68,11 @@ $H_v = $loraData->H;
                 'label' => 'Prakiraan Suhu Udara',
                 'format' => ['decimal', 2],
             ],
-            [
-                'attribute' => 'air_humidity',
-                'label' => 'Prakiraan Kelembaban Udara',
-                'format' => ['decimal', 2],
-            ],
+            // [
+            //     'attribute' => 'air_humidity',
+            //     'label' => 'Prakiraan Kelembaban Udara',
+            //     'format' => ['decimal', 2],
+            // ],
             [
                 'attribute' => 'soil_humidity',
                 'label' => 'Prediksi Kelembaban Tanah',

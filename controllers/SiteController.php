@@ -77,9 +77,30 @@ class SiteController extends Controller
     {
         // $data = $this->createAPIRequest();
         $data = JadwalNyiram::find()->all();
+        $data_jadwal = JadwalNyiram::find()->where(['humidity_state' => 'Kering'])->all();
 
         return $this->render('index', [
             'predictData' => $data,
+            'jadwalData' => $data_jadwal
+        ]);
+    }
+
+    public function actionAbout()
+    {
+
+        return $this->render('about', [
+            'title' => 'About',
+            'subtitle1' => 'SISTEM PENGINDERAAN TERINTEGRASI UNTUK PEMANTAUAN KONDISI LAHAN TANAM',
+            'subtitle2' => 'DAN OTOMATISASI PENJADWALAN PENYIRAMAN TANAMAN',
+            'subtitle3' => 'MENGGUNAKAN ALGORITMA LONG SHORT-TERM MEMORY',
+            'skripsi_text' => 'SKRIPSI',
+            'name' => 'ALI HIDAYAT',
+            'nim' => '171402019',
+            'prodi_text' => 'PROGRAM STUDI S1 TEKNOLOGI INFORMASI',
+            'fakultas_text' => 'FAKULTAS ILMU KOMPUTER DAN TEKNOLOGI INFORMASI',
+            'univ_text' => 'UNIVERSITAS SUMATERA UTARA',
+            'year' => '2024',
+
         ]);
     }
     public function actionDashboard()
