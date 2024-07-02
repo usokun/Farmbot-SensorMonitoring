@@ -2,7 +2,7 @@
 
 /* @var $this yii\web\View */
 
-use deyraka\materialdashboard\widgets\Cardstats;
+use deyraka\materialdashboard\widgets\CardStats;
 use deyraka\materialdashboard\widgets\CardChart;
 use app\models\LoraNpkT;
 use app\models\NpkThisWeekTempMoist;
@@ -118,16 +118,16 @@ $this->title = 'Home';
             <!-- T CARD -->
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <?php
-                echo Cardstats::widget(
+                echo CardStats::widget(
                     [
-                        "color" => Cardstats::COLOR_PRIMARY,
+                        "color" => CardStats::COLOR_PRIMARY,
                         "headerIcon" => "device_thermostat",
                         "title" => "Suhu",
                         "subtitle" => $T_v,
                         "footerIcon" => "",
                         "footerText" => "25 - 32 degree is expected. ",
                         // "footerUrl" => Url::to(['site/login']),
-                        "footerTextType" => Cardstats::TYPE_INFO,
+                        "footerTextType" => CardStats::TYPE_INFO,
                     ]
                 )
                 ?>
@@ -136,16 +136,16 @@ $this->title = 'Home';
             <!-- H CARD -->
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <?php
-                echo Cardstats::widget(
+                echo CardStats::widget(
                     [
-                        "color" => Cardstats::COLOR_PRIMARY,
+                        "color" => CardStats::COLOR_PRIMARY,
                         "headerIcon" => "water_drop",
                         "title" => "Kelembaban Tanah",
                         "subtitle" => $H_v,
                         "footerIcon" => "",
                         "footerText" => "10% - 80% is expected. ",
                         // "footerUrl" => Url::to(['site/login']),
-                        "footerTextType" => Cardstats::TYPE_INFO,
+                        "footerTextType" => CardStats::TYPE_INFO,
                     ]
                 )
                 ?>
