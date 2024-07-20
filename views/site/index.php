@@ -104,12 +104,12 @@ $this->title = 'Home';
         <h3>FARMBOT SENSOR MONITORING</h3>
         <div class="row" style="padding: 14px 14px">
             <div class="moist-status container-fluid">
-                <span id="moist-status">Status Kelembaban Tanah: <span id="moist-status-stat"></span><?= $h_state ?></span>
-                <span id="eta">Jadwal Penyiraman Selanjutnya: <span id="eta-time"></span><?php if (empty($time_to_water_array[0])) {
-                                                                                                echo "Tidak Ada Jadwal Penyiraman Hari ini";
-                                                                                            } else {
-                                                                                                echo $time_to_water_array[0];
-                                                                                            } ?>
+                <span id="eta">Status Kelembaban Tanah: <span id="eta-time"><?= $h_state ?></span></span>
+                <span id="eta">Jadwal Penyiraman Selanjutnya: <span id="eta-time"><?php if (empty($time_to_water_array[0])) {
+                                                                                        echo "Tidak Ada Jadwal Penyiraman Hari ini";
+                                                                                    } else {
+                                                                                        echo $time_to_water_array[0];
+                                                                                    } ?></span>
                 </span>
             </div>
         </div>
